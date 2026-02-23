@@ -1,14 +1,5 @@
 return { -- Fuzzy Finder (files, lsp, etc)
   'nvim-telescope/telescope.nvim',
-  -- By default, Telescope is included and acts as your picker for everything.
-
-  -- If you would like to switch to a different picker (like snacks, or fzf-lua)
-  -- you can disable the Telescope plugin by setting enabled to false and enable
-  -- your replacement picker by requiring it explicitly (e.g. 'custom.plugins.snacks')
-
-  -- Note: If you customize your config for yourself,
-  -- it’s best to remove the Telescope plugin config entirely
-  -- instead of just disabling it here, to keep your config clean.
   enabled = true,
   event = 'VimEnter',
   dependencies = {
@@ -30,39 +21,70 @@ return { -- Fuzzy Finder (files, lsp, etc)
     { 'nvim-tree/nvim-web-devicons', enabled = vim.g.have_nerd_font },
   },
   config = function()
-    -- Telescope is a fuzzy finder that comes with a lot of different things that
-    -- it can fuzzy find! It's more than just a "file finder", it can search
-    -- many different aspects of Neovim, your workspace, LSP, and more!
-    --
-    -- The easiest way to use Telescope, is to start by doing something like:
-    --  :Telescope help_tags
-    --
-    -- After running this command, a window will open up and you're able to
-    -- type in the prompt window. You'll see a list of `help_tags` options and
-    -- a corresponding preview of the help.
-    --
-    -- Two important keymaps to use while in Telescope are:
-    --  - Insert mode: <c-/>
-    --  - Normal mode: ?
-    --
-    -- This opens a window that shows you all of the keymaps for the current
-    -- Telescope picker. This is really useful to discover what Telescope can
-    -- do as well as how to actually do it!
+    local actions = require 'telescope.actions'
+    local builtin = require 'telescope.builtin'
 
-    -- [[ Configure Telescope ]]
-    -- See `:help telescope` and `:help telescope.setup()`
     require('telescope').setup {
-      -- You can put your default mappings / updates / etc. in here
-      --  All the info you're looking for is in `:help telescope.setup()`
-      --
-      -- defaults = {
-      --   mappings = {
-      --     i = { ['<c-enter>'] = 'to_fuzzy_refine' },
-      --   },
-      -- },
-      -- pickers = {}
+      defaults = {
+        layout_strategy = 'horizontal',
+        layout_config = {
+          horizontal = {
+            prompt_position = 'bottom',
+            preview_width = 0.6,
+            width = { padding = 0 },
+            height = { padding = 0 },
+          },
+        },
+        mappings = {
+          i = {
+            ['<C-k>'] = actions.move_selection_previous, -- move to prev result
+            ['<C-j>'] = actions.move_selection_next, -- move to next result
+            ['<C-l>'] = actions.select_default, -- open file
+          },
+          n = {
+            ['q'] = actions.close,
+          },
+        },
+      },
+      pickers = {
+        find_files = {
+          file_ignore_patterns = { 'node_modules', '.git', '.venv' },
+          hidden = true,
+        },
+        buffers = {
+          initial_mode = 'normal',
+          sort_lastused = true,
+          -- sort_mru = true,
+          mappings = {
+            n = {
+              ['d'] = actions.delete_buffer,
+              ['l'] = actions.select_default,
+            },
+          },
+        },
+        marks = {
+          initial_mode = 'normal',
+        },
+        oldfiles = {
+          initial_mode = 'normal',
+        },
+      },
+      live_grep = {
+        file_ignore_patterns = { 'node_modules', '.git', '.venv' },
+        additional_args = function(_) return { '--hidden' } end,
+      },
+      path_display = {
+        filename_first = {
+          reverse_directories = true,
+        },
+      },
       extensions = {
-        ['ui-select'] = { require('telescope.themes').get_dropdown() },
+        ['ui-select'] = {
+          require('telescope.themes').get_dropdown(),
+        },
+      },
+      git_files = {
+        previewer = false,
       },
     }
 
@@ -71,7 +93,6 @@ return { -- Fuzzy Finder (files, lsp, etc)
     pcall(require('telescope').load_extension, 'ui-select')
 
     -- See `:help telescope.builtin`
-    local builtin = require 'telescope.builtin'
     vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = '[S]earch [H]elp' })
     vim.keymap.set('n', '<leader>sk', builtin.keymaps, { desc = '[S]earch [K]eymaps' })
     vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = '[S]earch [F]iles' })

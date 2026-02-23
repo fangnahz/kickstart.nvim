@@ -16,34 +16,47 @@ local rtp = vim.opt.rtp
 rtp:prepend(lazypath)
 
 -- Import color theme based on environment variable NVIM_THEME
+-- 注意，默认值要和 lua/plugins/lualine.lua 保持一致
 local default_color_scheme = 'tokyonight'
 local env_var_nvim_theme = os.getenv 'NVIM_THEME' or default_color_scheme
 
 -- Define a table of theme modules
 local themes = {
-  tokyonight = 'custom.plugins.themes.tokyonight',
-  nord = 'custom.plugins.themes.nord',
-  onedark = 'custom.plugins.themes.onedark',
+  tokyonight = 'plugins.themes.tokyonight',
+  nord = 'plugins.themes.nord',
+  onedark = 'plugins.themes.onedark',
 }
 
 require('lazy').setup({
   require(themes[env_var_nvim_theme]),
-  require 'custom.plugins.telescope',
-  { 'NMAC427/guess-indent.nvim', opts = {} },
-  require 'custom.plugins.gitsigns',
-  require 'custom.plugins.which-key',
-  require 'custom.plugins.lsp',
-  require 'custom.plugins.autocompletion',
-  { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
-  require 'custom.plugins.mini',
-  require 'custom.plugins.treesitter',
-  require 'custom.plugins.debug',
-  -- require 'kickstart.plugins.indent_line',
-  -- require 'kickstart.plugins.lint',
-  -- require 'kickstart.plugins.autopairs',
-  require 'kickstart.plugins.neo-tree',
-  -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
-  require 'custom.plugins.none-ls',
+  require 'plugins.telescope',
+  require 'plugins.treesitter',
+  require 'plugins.lsp',
+  -- require 'plugins.lsp-tt',
+  require 'plugins.autocompletion',
+  -- require 'plugins.autocompletion-tt',
+  require 'plugins.autoformat',
+  -- require 'plugins.autoformat-tt',
+  require 'plugins.lualine',
+  require 'plugins.bufferline',
+  require 'plugins.neo-tree',
+  require 'plugins.oil',
+  require 'plugins.alpha',
+  require 'plugins.indent-blankline',
+  require 'plugins.lazygit',
+  require 'plugins.comment',
+  require 'plugins.debug',
+  require 'plugins.gitsigns',
+  require 'plugins.database',
+  require 'plugins.misc',
+  require 'plugins.harpoon',
+  -- require 'plugins.avante',
+  require 'plugins.aerial',
+  require 'plugins.vim-tmux-navigator',
+  require 'plugins.which-key',
+  require 'plugins.mini',
+  require 'plugins.lint',
+  require 'plugins.mason-tool-installer',
 }, {
   ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the
