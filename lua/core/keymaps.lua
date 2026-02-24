@@ -86,6 +86,23 @@ vim.keymap.set('n', '<leader>tp', ':tabp<CR>', opts) --  go to previous tab
 -- Toggle line wrapping
 vim.keymap.set('n', '<leader>lw', '<cmd>set wrap!<CR>', opts)
 
+-- Toggle Git line blame info
+vim.keymap.set('n', '<leader>gt', function() require('gitsigns').toggle_current_line_blame() end, { desc = 'Toggle git blame' })
+
+-- Toggle UI: spell check
+vim.keymap.set('n', '<leader>us', function()
+  local enabled = vim.opt_local.spell:get()
+
+  if enabled then
+    vim.opt_local.spell = false
+    print 'Spell OFF'
+  else
+    vim.opt_local.spell = true
+    vim.opt_local.spelllang = { 'en_us', 'cjk' }
+    print 'Spell ON (en_us + cjk)'
+  end
+end, { desc = 'Toggle spell (English + CJK)' })
+
 -- Press jk fast to exit insert mode
 vim.keymap.set('i', 'jk', '<ESC>', opts)
 vim.keymap.set('i', 'kj', '<ESC>', opts)

@@ -40,15 +40,6 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   callback = function() vim.hl.on_yank() end,
 })
 
--- Set kitty terminal padding to 0 when in nvim
-vim.cmd [[
-  augroup kitty_mp
-  autocmd!
-  au VimLeave * :silent !kitty @ set-spacing padding=default margin=default
-  au VimEnter * :silent !kitty @ set-spacing padding=0 margin=0 3 0 3
-  augroup END
-]]
-
 -- Trim trailing whitespace + extra blank lines at EOF for specified files
 vim.api.nvim_create_autocmd('BufWritePre', {
   pattern = { '*.vim', '.vimrc', 'vimrc' },
@@ -61,5 +52,14 @@ vim.api.nvim_create_autocmd('BufWritePre', {
     while vim.fn.line '$' > 1 and vim.fn.getline '$' == '' do
       vim.cmd '$delete'
     end
+  end,
+})
+
+-- 在 markdown 和文本文件中自动打开拼写检查
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = { 'markdown', 'text' },
+  callback = function()
+    vim.opt_local.spell = true
+    vim.opt_local.spelllang = { 'en_us', 'cjk' }
   end,
 })

@@ -17,5 +17,6 @@ return {
       topdelete = { text = '‾' },
       changedelete = { text = '~' },
     },
+    current_line_blame = true,
   },
 }
