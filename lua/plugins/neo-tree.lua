@@ -21,5 +21,14 @@ return {
         },
       },
     },
+    event_handlers = {
+      {
+        event = 'neo_tree_buffer_enter',
+        handler = function()
+          vim.opt_local.relativenumber = true -- Enable relative line numbers
+          vim.opt_local.number = true -- Also enable absolute numbers on the current line
+        end,
+      },
+    },
   },
 }
