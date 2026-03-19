@@ -118,6 +118,7 @@ return {
     --  When you add blink.cmp, luasnip, etc. Neovim now has *more* capabilities.
     --  So, we create new capabilities with blink.cmp, and then broadcast that to the servers.
     local capabilities = require('blink.cmp').get_lsp_capabilities()
+    local lspconfig_util = require 'lspconfig.util'
 
     -- Enable the following language servers
     --  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
@@ -169,6 +170,11 @@ return {
       dockerls = {},
       docker_compose_language_service = {},
       html = { filetypes = { 'html', 'twig', 'hbs' } },
+      sourcekit = {
+        cmd = { 'xcrun', 'sourcekit-lsp' },
+        filetypes = { 'swift', 'objective-c', 'objective-cpp' },
+        root_dir = lspconfig_util.root_pattern('.git', 'Package.swift', '*.xcodeproj', '*.xcworkspace'),
+      },
       -- clangd = {},
       -- gopls = {},
       -- pyright = {},
@@ -188,7 +194,10 @@ return {
     --    :Mason
     --
     -- You can press `g?` for help in this menu.
-    local ensure_installed = vim.tbl_keys(servers or {})
+    local mason_servers = vim.tbl_filter(function(server_name)
+      return server_name ~= 'sourcekit'
+    end, vim.tbl_keys(servers or {}))
+    local ensure_installed = vim.deepcopy(mason_servers)
     vim.list_extend(ensure_installed, {
       'lua_ls', -- Lua Language server
       'stylua', -- Used to format Lua code

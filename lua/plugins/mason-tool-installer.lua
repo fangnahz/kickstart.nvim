@@ -9,6 +9,7 @@ return {
         'prettier',
         'prettierd',
         'shfmt',
+        'taplo',
         'ruff',
         'google-java-format',
         -- optional for C/C++
